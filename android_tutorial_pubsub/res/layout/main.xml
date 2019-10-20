@@ -6,8 +6,26 @@
 
     <org.ros.android.view.RosTextView
         android:id="@+id/text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30dip" />
+
+    <org.ros.android.view.RosTextView
+        android:id="@+id/rosTextViewBool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dip" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Execute" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shutdown" />
 
 </LinearLayout>

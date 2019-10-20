@@ -17,12 +17,16 @@
 package org.ros.android.android_tutorial_pubsub;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
 import org.ros.android.MessageCallable;
 import org.ros.android.RosActivity;
 import org.ros.android.view.RosTextView;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
-import org.ros.rosjava_tutorial_pubsub.Talker;
+
 
 /**
  * @author damonkohler@google.com (Damon Kohler)
@@ -30,7 +34,10 @@ import org.ros.rosjava_tutorial_pubsub.Talker;
 public class MainActivity extends RosActivity {
 
   private RosTextView<std_msgs.String> rosTextView;
-  private Talker talker;
+  private ChanTalker talker;
+  private ChanListener listener;
+  private NodeMainExecutor nodeMainExecutor;
+  private NodeConfiguration nodeConfiguration;
 
   public MainActivity() {
     // The RosActivity constructor configures the notification title and ticker
@@ -44,7 +51,7 @@ public class MainActivity extends RosActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
     rosTextView = (RosTextView<std_msgs.String>) findViewById(R.id.text);
-    rosTextView.setTopicName("chatter");
+    rosTextView.setTopicName("eunchan");
     rosTextView.setMessageType(std_msgs.String._TYPE);
     rosTextView.setMessageToStringCallable(new MessageCallable<String, std_msgs.String>() {
       @Override
@@ -52,12 +59,35 @@ public class MainActivity extends RosActivity {
         return message.getData();
       }
     });
+
+
+
+    Button button1 = findViewById(R.id.button1);
+    button1.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+
+          nodeMainExecutor.execute(talker, nodeConfiguration);
+      }
+    });
+
+    Button button2 = findViewById(R.id.button2);
+    button2.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        nodeMainExecutor.shutdownNodeMain(talker);
+      }
+    });
+
+
+
   }
 
   @Override
   protected void init(NodeMainExecutor nodeMainExecutor) {
-    talker = new Talker();
-
+    this.nodeMainExecutor = nodeMainExecutor;
+    talker = new ChanTalker("eunchan");
+    listener = new ChanListener("chans");
     // At this point, the user has already been prompted to either enter the URI
     // of a master to use or to start a master locally.
 
@@ -65,9 +95,11 @@ public class MainActivity extends RosActivity {
     // activity.
     NodeConfiguration nodeConfiguration = NodeConfiguration.newPublic(getRosHostname());
     nodeConfiguration.setMasterUri(getMasterUri());
-    nodeMainExecutor.execute(talker, nodeConfiguration);
+//    nodeMainExecutor.execute(talker, nodeConfiguration);
     // The RosTextView is also a NodeMain that must be executed in order to
     // start displaying incoming messages.
     nodeMainExecutor.execute(rosTextView, nodeConfiguration);
+//    nodeMainExecutor.execute(listener, nodeConfiguration);
+    this.nodeConfiguration = nodeConfiguration;
   }
 }

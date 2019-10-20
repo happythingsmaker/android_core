@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
+
 import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
 import org.ros.android.view.VirtualJoystickView;
@@ -48,6 +50,7 @@ public class MainActivity extends RosActivity {
 
   private VirtualJoystickView virtualJoystickView;
   private VisualizationView visualizationView;
+  private Button button1;
 
   public MainActivity() {
     super("Teleop", "Teleop");
@@ -98,7 +101,8 @@ public class MainActivity extends RosActivity {
         NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress(),
             getMasterUri());
     nodeMainExecutor
-        .execute(virtualJoystickView, nodeConfiguration.setNodeName("virtual_joystick"));
-    nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName("android/map_view"));
+//        .execute(virtualJoystickView, nodeConfiguration);
+            .execute(virtualJoystickView, nodeConfiguration.setNodeName("/"));
+   // nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName("android/map_view"));
   }
 }
