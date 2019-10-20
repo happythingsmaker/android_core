@@ -23,3 +23,9 @@ build-log.xml
 /android_sensors_driver/
 *~
 *.log
+*.aar
+*.md5
+*.sha1
+*.pom
+null/org/ros/android_core/android_core_components/maven-metadata.xml
+null/org/ros/android_core/android_acm_serial/maven-metadata.xml

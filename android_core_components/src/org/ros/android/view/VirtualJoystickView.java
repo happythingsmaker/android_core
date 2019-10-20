@@ -945,7 +945,7 @@ public class VirtualJoystickView extends RelativeLayout implements AnimationList
           publisher.publish(currentVelocityCommand);
         }
       }
-    }, 0, 80);
+    }, 0, 100);
   }
 
   @Override

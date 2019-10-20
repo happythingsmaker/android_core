@@ -23,6 +23,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 
 import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
@@ -50,7 +53,12 @@ public class MainActivity extends RosActivity {
 
   private VirtualJoystickView virtualJoystickView;
   private VisualizationView visualizationView;
-  private Button button1;
+
+  private NodeMainExecutor nodeMainExecutor;
+  private NodeConfiguration nodeConfiguration;
+  private Switch switch1;
+  private SafeBumperSwitcher safeBumperSwitcher;
+
 
   public MainActivity() {
     super("Teleop", "Teleop");
@@ -92,6 +100,21 @@ public class MainActivity extends RosActivity {
             "move_base_dynamic/NavfnROS/plan"), new LaserScanLayer("base_scan"),
         new PoseSubscriberLayer("simple_waypoints_server/goal_pose"), new PosePublisherLayer(
             "simple_waypoints_server/goal_pose"), new RobotLayer("base_footprint")));
+
+    safeBumperSwitcher = new SafeBumperSwitcher();
+
+    switch1 = (Switch) findViewById(R.id.switch1);
+    switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (b){
+          nodeMainExecutor.execute(safeBumperSwitcher, nodeConfiguration);
+        }else {
+          nodeMainExecutor.shutdownNodeMain(safeBumperSwitcher);
+        }
+      }
+    });
+
   }
 
   @Override
@@ -103,6 +126,9 @@ public class MainActivity extends RosActivity {
     nodeMainExecutor
 //        .execute(virtualJoystickView, nodeConfiguration);
             .execute(virtualJoystickView, nodeConfiguration.setNodeName("/"));
-   // nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName("android/map_view"));
+//    nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName("android/map_view"));
+
+    this.nodeMainExecutor = nodeMainExecutor;
+    this.nodeConfiguration = nodeConfiguration;
   }
 }
