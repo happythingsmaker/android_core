@@ -93,6 +93,7 @@ public class MainActivity extends RosActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
     virtualJoystickView = (VirtualJoystickView) findViewById(R.id.virtual_joystick);
+/*
     visualizationView = (VisualizationView) findViewById(R.id.visualization);
     visualizationView.getCamera().jumpToFrame("map");
     visualizationView.onCreate(Lists.<Layer>newArrayList(new CameraControlLayer(),
@@ -100,8 +101,9 @@ public class MainActivity extends RosActivity {
             "move_base_dynamic/NavfnROS/plan"), new LaserScanLayer("base_scan"),
         new PoseSubscriberLayer("simple_waypoints_server/goal_pose"), new PosePublisherLayer(
             "simple_waypoints_server/goal_pose"), new RobotLayer("base_footprint")));
-
+*/
     safeBumperSwitcher = new SafeBumperSwitcher();
+
 
     switch1 = (Switch) findViewById(R.id.switch1);
     switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -109,8 +111,10 @@ public class MainActivity extends RosActivity {
       public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (b){
           nodeMainExecutor.execute(safeBumperSwitcher, nodeConfiguration);
+
         }else {
           nodeMainExecutor.shutdownNodeMain(safeBumperSwitcher);
+
         }
       }
     });
@@ -119,15 +123,14 @@ public class MainActivity extends RosActivity {
 
   @Override
   protected void init(NodeMainExecutor nodeMainExecutor) {
-    visualizationView.init(nodeMainExecutor);
+//    visualizationView.init(nodeMainExecutor);
     NodeConfiguration nodeConfiguration =
         NodeConfiguration.newPublic(InetAddressFactory.newNonLoopback().getHostAddress(),
             getMasterUri());
     nodeMainExecutor
-//        .execute(virtualJoystickView, nodeConfiguration);
-            .execute(virtualJoystickView, nodeConfiguration.setNodeName("/"));
-//    nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName("android/map_view"));
+        .execute(virtualJoystickView, nodeConfiguration);
 
+    //    nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName( "android/map_view"));
     this.nodeMainExecutor = nodeMainExecutor;
     this.nodeConfiguration = nodeConfiguration;
   }

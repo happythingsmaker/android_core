@@ -19,6 +19,6 @@
         android:id="@+id/switch1"
         android:layout_width="208dp"
         android:layout_height="66dp"
-        android:text="Safe Bumper Off / On" />
+        android:text="Safe Bumper Override Off / On" />
 
 </RelativeLayout>

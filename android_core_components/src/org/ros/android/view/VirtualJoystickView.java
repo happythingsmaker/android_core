@@ -19,6 +19,7 @@ package org.ros.android.view;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -245,18 +246,18 @@ public class VirtualJoystickView extends RelativeLayout implements AnimationList
   public VirtualJoystickView(Context context) {
     super(context);
     initVirtualJoystick(context);
-    topicName = "~cmd_vel";
+    topicName = "cmd_vel";
   }
 
   public VirtualJoystickView(Context context, AttributeSet attrs) {
     super(context, attrs);
     initVirtualJoystick(context);
-    topicName = "~cmd_vel";
+    topicName = "cmd_vel";
   }
 
   public VirtualJoystickView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
-    topicName = "~cmd_vel";
+    topicName = "cmd_vel";
   }
 
   /**
@@ -942,10 +943,11 @@ public class VirtualJoystickView extends RelativeLayout implements AnimationList
       @Override
       public void run() {
         if (publishVelocity) {
+//          Log.d("chans", currentVelocityCommand.toString());
           publisher.publish(currentVelocityCommand);
         }
       }
-    }, 0, 100);
+    }, 0, 20);
   }
 
   @Override
