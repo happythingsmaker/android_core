@@ -19,6 +19,7 @@ package org.ros.android.android_tutorial_teleop;
 import com.google.common.collect.Lists;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,6 +59,7 @@ public class MainActivity extends RosActivity {
   private NodeConfiguration nodeConfiguration;
   private Switch switch1;
   private SafeBumperSwitcher safeBumperSwitcher;
+  private StatusListener statusListener;
 
 
   public MainActivity() {
@@ -119,6 +121,13 @@ public class MainActivity extends RosActivity {
       }
     });
 
+    statusListener = new StatusListener(new StatusListener.TopicCallback() {
+      @Override
+      public void callbackCall(String string) {
+        Log.d("Main", string);
+      }
+    },"cmd_vel");
+
   }
 
   @Override
@@ -131,6 +140,7 @@ public class MainActivity extends RosActivity {
         .execute(virtualJoystickView, nodeConfiguration);
 
     //    nodeMainExecutor.execute(visualizationView, nodeConfiguration.setNodeName( "android/map_view"));
+    nodeMainExecutor.execute(statusListener, nodeConfiguration);
     this.nodeMainExecutor = nodeMainExecutor;
     this.nodeConfiguration = nodeConfiguration;
   }

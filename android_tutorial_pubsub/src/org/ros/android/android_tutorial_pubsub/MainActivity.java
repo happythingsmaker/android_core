@@ -17,6 +17,7 @@
 package org.ros.android.android_tutorial_pubsub;
 
 import android.os.Bundle;
+import android.transition.ChangeScroll;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -87,7 +88,14 @@ public class MainActivity extends RosActivity {
   protected void init(NodeMainExecutor nodeMainExecutor) {
     this.nodeMainExecutor = nodeMainExecutor;
     talker = new ChanTalker("eunchan");
-    listener = new ChanListener("chans");
+    listener = new ChanListener(new ChanListener.TopicCallback() {
+      @Override
+      public void callbackCall(String string) {
+        Log.d("mainActivity", string);
+      }
+    }, "chans");
+
+
     // At this point, the user has already been prompted to either enter the URI
     // of a master to use or to start a master locally.
 

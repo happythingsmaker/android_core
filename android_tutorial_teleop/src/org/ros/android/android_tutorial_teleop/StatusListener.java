@@ -14,11 +14,9 @@
  * the License.
  */
 
-package org.ros.android.android_tutorial_pubsub;
+package org.ros.android.android_tutorial_teleop;
 
 import org.apache.commons.logging.Log;
-//import android.util.Log;
-
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -26,44 +24,42 @@ import org.ros.node.ConnectedNode;
 import org.ros.node.NodeMain;
 import org.ros.node.topic.Subscriber;
 
+//import android.util.Log;
+
 
 /**
  * A simple {@link Subscriber} {@link NodeMain}.
  *
  * @author damonkohler@google.com (Damon Kohler)
  */
-
-
-
-public class ChanListener extends AbstractNodeMain {
-    interface TopicCallback {
-        public void callbackCall(String string);
-    }
-
+public class StatusListener extends AbstractNodeMain {
     private String topicName;
     TopicCallback topicCallback;
 
-    public ChanListener(TopicCallback topicCallback, String topicName ){
+    interface TopicCallback {
+        public void callbackCall(String string);
+    }
+    public StatusListener(TopicCallback topicCallback, String topicName ){
         this.topicName = topicName;
         this.topicCallback = topicCallback;
+
     }
-
-
 
     @Override
     public GraphName getDefaultNodeName() {
-        return GraphName.of("rosjava_tutorial_pubsub/chansListener");
+        return GraphName.of("rosjava_tutorial_pubsub/StatusListener");
     }
 
     @Override
     public void onStart(ConnectedNode connectedNode) {
         final Log log = connectedNode.getLog();
-        Subscriber<std_msgs.String> subscriber = connectedNode.newSubscriber(topicName, std_msgs.String._TYPE);
-        subscriber.addMessageListener(new MessageListener<std_msgs.String>() {
+        Subscriber<geometry_msgs.Twist> subscriber = connectedNode.newSubscriber(topicName, geometry_msgs.Twist._TYPE);
+        subscriber.addMessageListener(new MessageListener<geometry_msgs.Twist>() {
             @Override
-            public void onNewMessage(std_msgs.String message) {
-                log.info("I heard: \"" + message.getData() + "\"");
-                topicCallback.callbackCall(message.getData());
+            public void onNewMessage(geometry_msgs.Twist message) {
+                log.info("I heard: \"" + message.getLinear().getY() + "\"");
+                topicCallback.callbackCall(message.getLinear().getX() + "");
+
             }
         });
     }
