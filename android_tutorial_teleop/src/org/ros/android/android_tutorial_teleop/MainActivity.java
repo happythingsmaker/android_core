@@ -23,9 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.Switch;
 
 import org.ros.address.InetAddressFactory;
@@ -53,13 +51,15 @@ import org.ros.node.NodeMainExecutor;
 public class MainActivity extends RosActivity {
 
   private VirtualJoystickView virtualJoystickView;
-  private VisualizationView visualizationView;
+//  private VisualizationView visualizationView;
 
   private NodeMainExecutor nodeMainExecutor;
   private NodeConfiguration nodeConfiguration;
   private Switch switch1;
+  private Switch switch2;
   private SafeBumperSwitcher safeBumperSwitcher;
   private StatusListener statusListener;
+  private Lifter lifter;
 
 
   public MainActivity() {
@@ -105,8 +105,6 @@ public class MainActivity extends RosActivity {
             "simple_waypoints_server/goal_pose"), new RobotLayer("base_footprint")));
 */
     safeBumperSwitcher = new SafeBumperSwitcher();
-
-
     switch1 = (Switch) findViewById(R.id.switch1);
     switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override
@@ -116,7 +114,22 @@ public class MainActivity extends RosActivity {
 
         }else {
           nodeMainExecutor.shutdownNodeMain(safeBumperSwitcher);
+        }
+      }
+    });
 
+    lifter = new Lifter();
+    switch2 = (Switch) findViewById(R.id.switch2);
+    switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        lifter.setDirectrion(b);
+        nodeMainExecutor.execute(lifter, nodeConfiguration);
+        try {
+          Thread.sleep(500);
+          nodeMainExecutor.shutdownNodeMain(lifter);
+        } catch(InterruptedException e) {
+          // Process exception
         }
       }
     });
